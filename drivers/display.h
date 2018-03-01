@@ -10,6 +10,7 @@
 #define REGSELECT(r) (PORTC |= (r & 0x01) << 1)
 #define CHIPSELECT(s) (PORTC |= (c & 0x02) << 2)
 #define RESET(c) (PORTC |= (c & 0x01) << 4)
+#define OPEANBLE(e) (PORTC |= (c & 0x01) << 5)
 
 // Functions to interact with display.
 void Display_Send_Command(uint8_t cmd);

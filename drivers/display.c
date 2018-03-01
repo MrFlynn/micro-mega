@@ -15,6 +15,7 @@ void Display_Reset() {
 }
 
 void Display_Init() {
+    OPEANBLE(0x01);   // Enable display operations.
     CHIPSELECT(0x02); // Select the IC on the left side.
 
     Display_Send_Command(0x3F); // Turn display on.
