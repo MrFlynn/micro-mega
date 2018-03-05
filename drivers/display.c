@@ -15,7 +15,9 @@ void Display_Reset() {
 }
 
 void Display_Init() {
-    OPEANBLE(0x01);   // Enable display operations.
+    OPENABLE(0x01);   // Enable display operations. Disable immediately due to
+    OPENABLE(0x00);   // falling-edge trigger.
+    
     CHIPSELECT(0x02); // Select the IC on the left side.
 
     Display_Send_Command(0x3F); // Turn display on.
