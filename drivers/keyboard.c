@@ -2,7 +2,7 @@
 
 void KB_init() {
     EICRA |= 0x02; // Set external interrupt register to falling-edge trigger.
-    EIMSK |= 0x01; // Enable INT0 (PD2) to recieve external interrupts.
+    EIMSK |= 0x01; // Enable INT0 (PD2) to receive external interrupts.
 }
 
 void KB_destroy() {
