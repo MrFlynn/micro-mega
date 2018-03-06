@@ -2,11 +2,13 @@
 
 void KB_init() {
     EICRA |= 0x02; // Set external interrupt register to falling-edge trigger.
+    EIFR  |= 0x01; // Enable interrupt flag on INT0.
     EIMSK |= 0x01; // Enable INT0 (PD2) to receive external interrupts.
 }
 
 void KB_destroy() {
     EICRA &= 0xFD; // Turn off falling-edge triggering.
+    EIRF  &= 0xFE; // Disable interrupt flag.
     EIMSK &= 0xFE; // Disable interrupts on INT0.
 }
 
@@ -27,9 +29,9 @@ ISR(VECTORPORT) {
 
     if (count >= 11) {
         // Set curr_char_code to value of char_byte after 8 clock cycles.
-        curr_char_code = char_byte;
+        curr_char_code = char_read_buffer;
 
-        // Reset counter and char_byte values.
+        // Reset counter and char_read_buffer values.
         count = 0;
         char_read_buffer = 0x00;
     }
