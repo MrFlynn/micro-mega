@@ -11,21 +11,26 @@ void KB_destroy() {
 }
 
 ISR(VECTORPORT) {
-    // Count and character byte storage.
-    static unsigned char count;
-    static uint8_t char_byte;
-
-    if (DATAPORT) {
-        char_byte |= (1 << count);
+    // Count and received character buffer.
+    static uint8_t count;
+    static uint8_t char_read_buffer;
+  
+    if (count > 0 && count < 9) {
+        // Data on bits 1 to 8.
+        // 0: start, 9: parity, 10: stop, 11: ACK.
+        if (DATAPORT) {
+            char_read_buffer |= (1 << count); // Shift data over by count and or with storage.
+        }
     }
 
     count++;
 
-    if (count > 7) {
+    if (count >= 11) {
         // Set curr_char_code to value of char_byte after 8 clock cycles.
         curr_char_code = char_byte;
 
         // Reset counter and char_byte values.
-        count, char_byte = 0x00;
+        count = 0;
+        char_read_buffer = 0x00;
     }
 }
