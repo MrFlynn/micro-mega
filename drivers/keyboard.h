@@ -4,7 +4,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define DATAPORT (~PIND & 0x02)    // Data bus.
+#define DATAPORT PIND & 0x02       // Data bus.
 #define VECTORPORT INT0_vect       // Interrupt vector port.
 
 // Current character returned by the keyboard.
