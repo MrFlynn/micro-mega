@@ -14,5 +14,7 @@ typedef struct operation {
 
 void push(op_t ** head, op_t ** tail, struct operation * next_node);
 void pop(op_t ** head, op_t ** tail);
+uint8_t empty(op_t ** head, op_t ** tail);
+void voidfunc(char * c);
 
 #endif
