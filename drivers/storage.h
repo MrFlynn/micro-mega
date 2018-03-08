@@ -7,6 +7,7 @@
 
 // Max number of files to store and the max filename length.
 #define MAX_FILES 16
+#define MAX_FILE_SIZE 32
 #define MAX_FILENAME_LENGTH 8
 
 // Holds addresses for next file info block and next place file data can be
