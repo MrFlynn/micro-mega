@@ -48,5 +48,5 @@ uint8_t empty(op_t ** head, op_t ** tail) {
 // Empty function to pass into message queue if the response from the message
 // requires no response.
 void voidfunc(char * c) {
-    return
+    return;
 }
