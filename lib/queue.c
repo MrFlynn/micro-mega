@@ -23,12 +23,7 @@ void pop(op_t ** head, op_t ** tail) {
     if (*head == NULL) {
         // Exit if list is empty.
         return;
-    }
-
-    // If the previous branch is false, execute returnfunc for head.
-    (*head)->returnfunc((*head)->c);
-
-    if (*head == *tail) {
+    } else if (*head == *tail) {
         // Remove last item in the list. Free memory for head node and reset
         // pointers.
         free(*head);
