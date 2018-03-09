@@ -27,7 +27,7 @@ void read_val(op_t * operator) {
 void perform_storage_operation(op_t ** head, op_t ** tail) {
     if (eeprom_is_ready() == 1) {
         // Only run if the EEPROM is ready for reading or writing.
-        switch(operator->op_num):
+        switch((*head)->op_num) {
             case 0:
                 // Operation 0 is a read.
                 read_val(&head);
@@ -65,4 +65,44 @@ void queue_string_write(char * string,
         // Push on to the queue.
         push(head, tail, new_write);
     }
+}
+
+void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len) {
+    op_t * file_start_write = malloc(sizeof(op_t));
+    file_start_write->op_num = 1;
+    file_start_write->addr = next_file_info_addr + 1;
+    file_start_write->c = (char *)(next_file_data_addr - string_len);
+    file_start_write->returnfunc = &voidfunc;
+    file_start_write->next = NULL;
+
+    push(head, tail, file_start_write);
+
+    op_t * file_end_write = malloc(sizeof(op_t));
+    file_end_write->op_num = 1;
+    file_end_write->addr = next_file_info_addr + 1;
+    file_end_write->c = (char *)next_file_data_addr;
+    file_end_write->returnfunc = &voidfunc;
+    file_end_write->next = NULL;
+
+    push(head, tail, file_end_write);
+
+    next_file_info_addr +=3;
+
+    op_t * new_info_start = malloc(sizeof(op_t));
+    new_info_start->op_num = 1;
+    new_info_start->addr = NEXT_FILE_INFO_ADDR;
+    new_info_start->c = (char *)next_file_info_addr;
+    new_info_start->returnfunc = &voidfunc;
+    new_info_start->next = NULL;
+
+    push(head, tail, new_info_start);
+
+    op_t * new_data_start = malloc(sizeof(op_t));
+    new_data_start->op_num = 1;
+    new_data_start->addr = NEXT_FILE_BYTE_ADDR;
+    new_data_start->c = (char *)next_file_data_addr;
+    new_data_start->returnfunc = &voidfunc;
+    new_data_start->next = NULL;
+
+    push(head, tail, new_info_start);
 }

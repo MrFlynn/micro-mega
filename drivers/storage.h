@@ -3,6 +3,7 @@
 
 #include <avr/eeprom.h>
 #include <string.h>
+#include "../common.h"
 #include "../lib/queue.c"
 
 // Max number of files to store and the max filename length.
@@ -33,5 +34,6 @@ void queue_string_write(char * string,
     uint8_t start_addr, 
     op_t ** head, 
     op_t ** tail);
+void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len);
 
 #endif

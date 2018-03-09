@@ -11,8 +11,8 @@ uint8_t next_file_info_addr = 0x00;
 uint8_t next_file_data_addr = 0x00;
 
 // Cached list of files and memory indexes.
-char * file_list[MAX_FILES];
-char * file_addr_indexes[MAX_FILES][2];
+const char * file_list[MAX_FILES];
+uint8_t file_addr_indexes[MAX_FILES][2];
 uint8_t num_files = 0x00;
 
 // Locks for performing reading and writing.

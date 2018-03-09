@@ -1,9 +1,6 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include <inttypes.h>
-#include <stdlib.h>
-
 typedef struct operation {
     uint8_t op_num;             // Memory operation; 0: read, 1: write.
     uint8_t addr;               // Address to perform operation on.

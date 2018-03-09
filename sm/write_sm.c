@@ -2,7 +2,7 @@
 
 // Main state machine for write operations. Takes a write_state and returns
 // the next state in the code.
-WRITE_STATES write_tick(WRITE_STATES state) {
+enum WRITE_STATES write_tick(enum WRITE_STATES state) {
     switch(state) { // Transitions
         case write_start:
             state = write_start;
@@ -50,9 +50,7 @@ WRITE_STATES write_tick(WRITE_STATES state) {
             // Increment location for file info.
             next_file_info_addr += 8;
 
-            // TODO: Write more file info here.
-            // i.e. next_file_info_addr, next_file_info_addr, and string
-            // bounding locations into memory.
+            queue_metadata_writes(write_head, write_tail, string_length);
 
             break;
         case write_run_ops:
