@@ -1,3 +1,6 @@
+#ifndef STORAGE_C
+#define STORAGE_C
+
 #include "storage.h"
 
 // Given op_t, this function writes the character to the given address in the 
@@ -83,3 +86,5 @@ void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len) {
     
     next_file_info_addr +=3;
 }
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef QUEUE_C
+#define QUEUE_C
+
 #include "queue.h"
 
 // Creates new op_t using the given inputs. Allocates memory and sets all 
@@ -64,3 +67,5 @@ uint8_t empty(op_t ** head, op_t ** tail) {
 void voidfunc(char * c) {
     return;
 }
+
+#endif
