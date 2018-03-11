@@ -32,7 +32,7 @@ enum READ_STATES read_tick(enum READ_STATES state) {
         case read_wait: break;
         case read_queue_ops:
             // Queue data read operations.
-            read_in_range(read_start_addr, offset, &read_head, &read_tail);
+            read_in_range(read_start_addr, read_offset, &read_head, &read_tail);
             break;
         case write_run_ops:
             // Continuously perform operations until queue is empty.

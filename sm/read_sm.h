@@ -7,7 +7,7 @@
 #include "../lib/queue.h"
 #include "../drivers/storage.c"
 
-typedef struct READ_STATES {
+typedef enum READ_STATES {
     read_start,
     read_wait,
     read_queue_ops,
