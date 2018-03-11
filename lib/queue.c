@@ -1,5 +1,20 @@
 #include "queue.h"
 
+// Creates new op_t using the given inputs. Allocates memory and sets all 
+// internal variables. The next node is set to be NULL, therefor any functions
+// that utilize the node returned by this function should set it accordingly.
+op_t * new_op_t(uint8_t opnum, uint8_t address, char ic, void (*f)(char *)) {
+    op_t * new_node = malloc(sizeof(op_t));
+    
+    new_node->op_num = opnum;
+    new_node->addr = address;
+    new_node->c = (uint8_t)ic;
+    new_node->returnfunc = f;
+    new_node->next = NULL;
+    
+    return new_node;
+}
+
 // Pushes new op_t to the queue. The function will also properly set the head 
 // and tail pointers as required when performing a queue push.
 void push(op_t ** head, op_t ** tail, op_t * next_node) {
@@ -14,8 +29,7 @@ void push(op_t ** head, op_t ** tail, op_t * next_node) {
     }
 }
 
-// Removes (pops) op_t from the front of the queue (if it exists). In addition,
-// this function will run the specified `returnfunc` in the given queue node.
+// Removes (pops) op_t from the front of the queue (if it exists). 
 // 
 // All memory operations are handled internally and pointers are set where
 // applicable.
