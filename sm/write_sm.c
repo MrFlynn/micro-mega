@@ -43,12 +43,7 @@ enum WRITE_STATES write_tick(enum WRITE_STATES state) {
                 &write_tail);
             
             uint8_t string_length = strlen(write_string);
-
-            // Increment location for next string writes.
-            next_file_data_addr += string_length;
-
-            // Increment location for file info.
-            next_file_info_addr += 8;
+            update_metadata_cache(string_length);
 
             // Queue up writes to metadata block.
             queue_metadata_writes(&write_head, &write_tail, string_length);
