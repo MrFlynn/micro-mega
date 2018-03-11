@@ -5,7 +5,7 @@
 enum WRITE_STATES write_tick(enum WRITE_STATES state) {
     switch(state) { // Transitions
         case write_start:
-            state = write_start;
+            state = write_wait;
             break;
         case write_wait:
             // Transition to `write_queue_ops` when flag is enabled.
@@ -15,7 +15,7 @@ enum WRITE_STATES write_tick(enum WRITE_STATES state) {
             state = write_run_ops;
             break;
         case write_run_ops:
-            if (empty(write_head, write_tail)) {
+            if (empty(&write_head, &write_tail)) {
                 // If the queue is empty, go back to wait and reset flag.
                 state = write_wait;
                 write_flag = 0x00;
@@ -35,12 +35,12 @@ enum WRITE_STATES write_tick(enum WRITE_STATES state) {
             // Add filename and file contents strings into messaging queue.
             queue_string_write(write_fname, 
                 next_file_info_addr, 
-                write_head,
-                write_tail);
+                &write_head,
+                &write_tail);
             queue_string_write(write_string,
                 next_file_data_addr,
-                write_head,
-                write_tail);
+                &write_head,
+                &write_tail);
             
             uint8_t string_length = strlen(write_string);
 
@@ -50,12 +50,13 @@ enum WRITE_STATES write_tick(enum WRITE_STATES state) {
             // Increment location for file info.
             next_file_info_addr += 8;
 
-            queue_metadata_writes(write_head, write_tail, string_length);
+            // Queue up writes to metadata block.
+            queue_metadata_writes(&write_head, &write_tail, string_length);
 
             break;
         case write_run_ops:
             // Keep performing operations and popping them off the list.
-            perform_storage_operation(write_head, write_tail);
+            perform_storage_operation(&write_head, &write_tail);
             break;
         default: break;
     }
