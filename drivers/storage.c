@@ -4,7 +4,7 @@
 // operator node.
 void write_char(op_t * operator) {
     uint8_t * addr_ptr = &operator->addr;
-    eeprom_write_byte(addr_ptr, (uint8_t)operator->c);
+    eeprom_write_byte(addr_ptr, operator->c);
 }
 
 // Takes op_t and triggers a read from memory at the location specified in
@@ -52,15 +52,8 @@ void queue_string_write(char * string,
     op_t ** tail) {
 
     for (uint8_t i = 0; i < strlen(string); i++) {
-        // Allocate memory for new operation.
-        op_t * new_write = malloc(sizeof(op_t));
-
-        // Setup new write operation for the queue.
-        new_write->op_num = 1;
-        new_write->addr = start_addr + i;
-        new_write->c = &string[i];
-        new_write->returnfunc = &voidfunc;
-        new_write->next = NULL;
+        // Create new messaging queue node.
+        op_t * new_write = new_op_t(1, start_addr + i, string[i], &voidfunc);
 
         // Push on to the queue.
         push(head, tail, new_write);
@@ -68,41 +61,28 @@ void queue_string_write(char * string,
 }
 
 void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len) {
-    op_t * file_start_write = malloc(sizeof(op_t));
-    file_start_write->op_num = 1;
-    file_start_write->addr = next_file_info_addr + 1;
-    file_start_write->c = (char *)(next_file_data_addr - string_len);
-    file_start_write->returnfunc = &voidfunc;
-    file_start_write->next = NULL;
-
+    // Queue write in file metadata block for starting address of file contents
+    op_t * file_start_write = new_op_t(1, (next_file_info_addr + 1), 
+                                        (next_file_data_addr - string_len), 
+                                        &voidfunc);    
+    // Queue write in file metadata block for ending address of file contents.
+    op_t * file_end_write = new_op_t(1, (next_file_data_addr + 2), 
+                                        next_file_data_addr, 
+                                        &voidfunc);
+    // Update address for next empty byte of metadata memory.
+    op_t * new_info_start = new_op_t(1, NEXT_FILE_INFO_ADDR, 
+                                        (next_file_info_addr + 3), 
+                                        &voidfunc);
+    // Update address for next byte of free file content memory.
+    op_t * new_data_start = new_op_t(1, NEXT_FILE_BYTE_ADDR, 
+                                        next_file_data_addr, 
+                                        &voidfunc);
+    
+    // Push everything on to the queue.
     push(head, tail, file_start_write);
-
-    op_t * file_end_write = malloc(sizeof(op_t));
-    file_end_write->op_num = 1;
-    file_end_write->addr = next_file_info_addr + 1;
-    file_end_write->c = (char *)next_file_data_addr;
-    file_end_write->returnfunc = &voidfunc;
-    file_end_write->next = NULL;
-
     push(head, tail, file_end_write);
-
+    push(head, tail, new_info_start);
+    push(head, tail, new_data_start);
+    
     next_file_info_addr +=3;
-
-    op_t * new_info_start = malloc(sizeof(op_t));
-    new_info_start->op_num = 1;
-    new_info_start->addr = NEXT_FILE_INFO_ADDR;
-    new_info_start->c = (char *)next_file_info_addr;
-    new_info_start->returnfunc = &voidfunc;
-    new_info_start->next = NULL;
-
-    push(head, tail, new_info_start);
-
-    op_t * new_data_start = malloc(sizeof(op_t));
-    new_data_start->op_num = 1;
-    new_data_start->addr = NEXT_FILE_BYTE_ADDR;
-    new_data_start->c = (char *)next_file_data_addr;
-    new_data_start->returnfunc = &voidfunc;
-    new_data_start->next = NULL;
-
-    push(head, tail, new_info_start);
 }
