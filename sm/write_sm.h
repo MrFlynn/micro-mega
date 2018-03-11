@@ -12,7 +12,7 @@ typedef enum WRITE_STATES {
     write_wait,  
     write_queue_ops, 
     write_run_ops 
-};
+} write_state;
 
 op_t * write_head = NULL;
 op_t * write_tail = NULL;

@@ -20,7 +20,7 @@ uint8_t write_flag = 0x00;
 uint8_t read_flag = 0x00;
 
 // Data to write section.
-char * write_fname[MAX_FILENAME_LENGTH];
-char * write_string[MAX_FILE_SIZE];
+char write_fname[MAX_FILENAME_LENGTH];
+char write_string[MAX_FILE_SIZE];
 
 #endif

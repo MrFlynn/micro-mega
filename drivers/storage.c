@@ -3,7 +3,7 @@
 // Given op_t, this function writes the character to the given address in the 
 // operator node.
 void write_char(op_t * operator) {
-    uint8_t * addr_ptr = operator->addr;
+    uint8_t * addr_ptr = &operator->addr;
     eeprom_write_byte(addr_ptr, (uint8_t)operator->c);
 }
 
@@ -12,7 +12,7 @@ void write_char(op_t * operator) {
 // run with te value taken from memory.
 void read_val(op_t * operator) {
     // Convert address into address pointer.
-    const uint8_t * addr_ptr = operator->addr;
+    const uint8_t * addr_ptr = &operator->addr;
     
     // Get character from read operation and run operator returnfunc.
     uint8_t ret = eeprom_read_byte(addr_ptr);
@@ -30,11 +30,11 @@ void perform_storage_operation(op_t ** head, op_t ** tail) {
         switch((*head)->op_num) {
             case 0:
                 // Operation 0 is a read.
-                read_val(&head);
+                read_val(*head);
                 break;
             case 1:
                 // Operation 1 is a write.
-                write_char(&head);
+                write_char(*head);
                 break;
             default: break;
 
@@ -58,7 +58,7 @@ void queue_string_write(char * string,
         // Setup new write operation for the queue.
         new_write->op_num = 1;
         new_write->addr = start_addr + i;
-        new_write->c = string[i];
+        new_write->c = &string[i];
         new_write->returnfunc = &voidfunc;
         new_write->next = NULL;
 
