@@ -4,6 +4,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <string.h>
+
 #include "drivers/storage.h"
 
 // Addresses for next open file info and data blocks.
@@ -28,7 +30,7 @@ uint8_t read_start_addr = 0x00;
 uint8_t read_offset = 0x00;
 
 // Character display buffer.
-char disp_buffer[MAX_FILE_SIZE]
+char disp_buffer[MAX_FILE_SIZE + 1];
 
 // Functions:
 
@@ -44,6 +46,11 @@ void update_metadata_cache(uint8_t len) {
     next_file_info_addr += 8;
 
     num_files++;
+}
+
+// Appends new character to display buffer.
+void write_disp_buffer(char * c) {
+    strcat(disp_buffer, &c + '\0');
 }
 
 #endif
