@@ -34,6 +34,10 @@ void queue_string_write(char * string,
     uint8_t start_addr, 
     op_t ** head, 
     op_t ** tail);
+void read_in_range(uint8_t addr_start, 
+    uint8_t addr_offset,
+    op_t ** head,
+    op_t ** tail);
 void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len);
 
 #endif

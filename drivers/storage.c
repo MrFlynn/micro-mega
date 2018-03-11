@@ -60,6 +60,22 @@ void queue_string_write(char * string,
     }
 }
 
+// Given a starting address and an offset in addition to the head and tail of a
+// queue, this function generates individual read operations and pushes them
+// on the queue.
+void read_in_range(uint8_t addr_start, 
+    uint8_t addr_offset, 
+    op_t ** head,
+    op_t ** tail) {
+
+    for (uint8_t i = 0; i < addr_offset; i++) {
+        op_t * new_read = new_op_t(0, addr_start + i, '0', &write_disp_buffer);
+        push(head, tail, new_read);
+    }
+}
+
+// This function enqueues operations to update information in the metadata 
+// section of memory for files.
 void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len) {
     // Queue write in file metadata block for starting address of file contents
     op_t * file_start_write = new_op_t(1, (next_file_info_addr), 
