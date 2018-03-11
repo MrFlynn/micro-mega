@@ -56,7 +56,7 @@ void pop(op_t ** head, op_t ** tail) {
 // Returns a 1 if the head and tail pointer of the queue are equal, i.e. if 
 // the queue has no items in it.
 uint8_t empty(op_t ** head, op_t ** tail) {
-    return (uint8_t)(*head == * tail);
+    return (uint8_t)(*head == NULL && *tail == NULL);
 }
 
 // Empty function to pass into message queue if the response from the message
