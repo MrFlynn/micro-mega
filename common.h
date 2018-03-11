@@ -36,7 +36,7 @@ char disp_buffer[MAX_FILE_SIZE + 1];
 
 // Updates RAM cached file metadata arrays.
 void update_metadata_cache(uint8_t len) {
-    file_list[num_files] = write_fname;
+    strcpy(file_list[num_files], write_fname);
     
     file_addr_indexes[num_files][0] = next_file_data_addr;
     next_file_data_addr += len; // Increment location for next string writes.
@@ -50,7 +50,7 @@ void update_metadata_cache(uint8_t len) {
 
 // Appends new character to display buffer.
 void write_disp_buffer(char * c) {
-    strcat(disp_buffer, &c + '\0');
+    strcat(disp_buffer, c + '\0');
 }
 
 #endif
