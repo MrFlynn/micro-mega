@@ -3,19 +3,15 @@
 // Given op_t, this function writes the character to the given address in the 
 // operator node.
 void write_char(op_t * operator) {
-    uint8_t * addr_ptr = &operator->addr;
-    eeprom_write_byte(addr_ptr, operator->c);
+    eeprom_write_byte((uint8_t *)operator->addr, operator->c);
 }
 
 // Takes op_t and triggers a read from memory at the location specified in
 // the queue node. Once memory has been read, the applicable returnfunc is
 // run with te value taken from memory.
 void read_val(op_t * operator) {
-    // Convert address into address pointer.
-    const uint8_t * addr_ptr = &operator->addr;
-    
     // Get character from read operation and run operator returnfunc.
-    uint8_t ret = eeprom_read_byte(addr_ptr);
+    uint8_t ret = eeprom_read_byte((uint8_t *)operator->addr);
     operator->returnfunc((char *)&ret);
 }
 
@@ -37,13 +33,14 @@ void perform_storage_operation(op_t ** head, op_t ** tail) {
                 write_char(*head);
                 break;
             default: break;
-
+        }        
+        
         // Pop the head from the queue.
         pop(head, tail);
     }
 }
 
-// Pushes individual chracter writes on to the queue in preparation for a write
+// Pushes individual character writes on to the queue in preparation for a write
 // operation. This function assumes that the characters will be written to
 // consecutive locations in memory.
 void queue_string_write(char * string,
@@ -62,11 +59,11 @@ void queue_string_write(char * string,
 
 void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len) {
     // Queue write in file metadata block for starting address of file contents
-    op_t * file_start_write = new_op_t(1, (next_file_info_addr + 1), 
+    op_t * file_start_write = new_op_t(1, (next_file_info_addr), 
                                         (next_file_data_addr - string_len), 
                                         &voidfunc);    
     // Queue write in file metadata block for ending address of file contents.
-    op_t * file_end_write = new_op_t(1, (next_file_data_addr + 2), 
+    op_t * file_end_write = new_op_t(1, (next_file_info_addr + 1), 
                                         next_file_data_addr, 
                                         &voidfunc);
     // Update address for next empty byte of metadata memory.
