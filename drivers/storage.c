@@ -103,4 +103,49 @@ void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len) {
     next_file_info_addr +=3;
 }
 
+// Extracts file metadata from EEPROM and places it into RAM for faster access
+// of file metadata.
+void build_metadata_cache() {
+    // Continue only if EEPROM is ready.
+    if (eeprom_is_ready() == 1) {
+        // Block size and temporary storage array.
+        uint8_t block_size = (MAX_FILES * 10) + 2;
+        uint8_t file_metadata[block_size];
+
+        // Read data from memory.
+        eeprom_read_block((void *)file_metadata, 
+            (const void *)NEXT_FILE_INFO_ADDR,
+            block_size);
+
+        // Wait until operation has completed.
+        do {} while(!eeprom_busy_wait());
+
+        // Get next avalaible byte addresses.
+        next_file_info_addr = file_metadata[0];
+        next_file_data_addr = file_metadata[1];
+
+        for (uint8_t i = 2; i < block_size; i++) {
+            curr_byte = file_metadata[i];
+
+            if (curr_byte != 0xFF) {
+                // Discard if cell has empty data.
+                if (i % 9 == 8) {
+                    // Starting address of file i.
+                    file_addr_indexes[num_files][0] = curr_byte;
+                } else if ((i % 9 == 0) && i != 0) {
+                    // Ending address of file i.
+                    file_addr_indexes[num_files][1] = curr_byte;
+                    num_files++;
+                } else {
+                    // Copy title character to file list cache.
+                    strcat(file_list[num_files], (char *)curr_byte);
+                }
+            }
+        }
+
+        // Set boot complete flag.
+        boot_complete = 0x01;
+    }
+}
+
 #endif

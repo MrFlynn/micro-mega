@@ -39,5 +39,6 @@ void read_in_range(uint8_t addr_start,
     op_t ** head,
     op_t ** tail);
 void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len);
+void build_metadata_cache();
 
 #endif
