@@ -21,7 +21,8 @@ uint8_t num_files = 0;
 uint8_t write_flag = 0x00;
 uint8_t read_flag = 0x00;
 
-// Data to write section.
+// File information section.
+char command_name[2];
 char write_fname[MAX_FILENAME_LENGTH];
 char write_string[MAX_FILE_SIZE];
 
