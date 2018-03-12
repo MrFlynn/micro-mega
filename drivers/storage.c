@@ -107,10 +107,11 @@ void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len) {
 // of file metadata.
 void build_metadata_cache() {
     // Continue only if EEPROM is ready.
-    if (eeprom_is_ready() == 1) {
+    if (eeprom_is_ready() == 1 && metadata_building == 0x00) {
         // Block size and temporary storage array.
         uint8_t block_size = (MAX_FILES * 10) + 2;
         uint8_t file_metadata[block_size];
+        metadata_building = 0x01;
 
         // Read data from memory.
         eeprom_read_block((void *)file_metadata, 
@@ -129,10 +130,10 @@ void build_metadata_cache() {
 
             if (curr_byte != 0xFF) {
                 // Discard if cell has empty data.
-                if (i % 9 == 8) {
+                if (i % 11 == 10) {
                     // Starting address of file i.
                     file_addr_indexes[num_files][0] = curr_byte;
-                } else if ((i % 9 == 0) && i != 0) {
+                } else if (i % 11 == 0) {
                     // Ending address of file i.
                     file_addr_indexes[num_files][1] = curr_byte;
                     num_files++;
@@ -143,8 +144,9 @@ void build_metadata_cache() {
             }
         }
 
-        // Set boot complete flag.
+        // Set boot complete flags.
         boot_complete = 0x01;
+        metadata_building = 0x00;
     }
 }
 
