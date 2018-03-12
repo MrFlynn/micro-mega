@@ -34,6 +34,7 @@ char disp_buffer[MAX_FILE_SIZE + 1];
 
 // Boot flags.
 uint8_t boot_complete = 0x00;
+uint8_t metadata_building = 0x00;
 
 // Command entered flag.
 uint8_t command_flag = 0x00;
