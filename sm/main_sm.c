@@ -1,4 +1,3 @@
-#include <string.h>
 #include "main_sm.h"
 
 enum MAIN_STATES main_tick(enum MAIN_STATES state) {
@@ -39,6 +38,7 @@ enum MAIN_STATES main_tick(enum MAIN_STATES state) {
         case main_wait_command:
             break;
         case main_parse_command_string:
+            break_command_string();
             break;
         case main_run_command:
             break;

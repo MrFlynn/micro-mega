@@ -119,14 +119,14 @@ void build_metadata_cache() {
             block_size);
 
         // Wait until operation has completed.
-        do {} while(!eeprom_busy_wait());
+        eeprom_busy_wait();
 
-        // Get next avalaible byte addresses.
-        next_file_info_addr = file_metadata[0];
-        next_file_data_addr = file_metadata[1];
+        // Get next available byte addresses.
+        next_file_info_addr = file_metadata[0] != 0xFF ? file_metadata[0] : FILE_INFO_START;
+        next_file_data_addr = file_metadata[1] != 0xFF ? file_metadata[1] : FILE_REGION_START;
 
         for (uint8_t i = 2; i < block_size; i++) {
-            curr_byte = file_metadata[i];
+            uint8_t curr_byte = file_metadata[i];
 
             if (curr_byte != 0xFF) {
                 // Discard if cell has empty data.

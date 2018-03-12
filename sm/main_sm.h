@@ -2,6 +2,7 @@
 #define MAIN_SM
 
 #include "../common.h"
+#include "../lib/string_parse.c"
 
 typedef enum MAIN_STATES {
     main_start,

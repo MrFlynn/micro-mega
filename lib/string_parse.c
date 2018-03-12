@@ -16,9 +16,9 @@ void break_command_string() {
     clear_buffers(); // Clear buffers used here.
 
     for(uint8_t i = 0; i < strlen(disp_buffer); i++) {
-        char ci = disp_buffer[i];
+        char * ci = (char *)disp_buffer[i];
 
-        if (ci == ' ') {
+        if (*ci == ' ') {
             array_index++;
         } else {
             switch(array_index) {
