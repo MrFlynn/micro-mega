@@ -7,29 +7,40 @@ enum MAIN_STATES main_tick(enum MAIN_STATES state) {
             state = main_setup_cache;
             break;
         case main_setup_cache:
-            state = main_send_data;
+            // Wait until the metadata SRAM cache has been built.
+            state = boot_complete == 0x01 ? main_wait_command : main_setup_cache;
             break;
-        case main_send_data:
-            state = main_send_data;
+        case main_wait_command:
+            // If the command flag has been triggered, parse the string.
+            if (command_flag == 0x01) {
+                state = main_parse_command_string;
+            } else {
+                state = main_wait_command;
+            }
+
+            break;
+        case main_parse_command_string:
+            state = main_run_command;
+            break;
+        case main_run_command:
+            state = main_wait_command;
             break;
         default:
+            state = main_start;
             break;
     }
 
-    switch(state) {
+    switch(state) { // Actions
         case main_start:
             break;
         case main_setup_cache:
-            next_file_info_addr = FILE_INFO_START;
-            next_file_data_addr = FILE_REGION_START;
-
-            strcpy(write_fname, "test");
-            strcpy(write_string, "hello");
-
-            write_flag = 0x01;
-
+            build_metadata_cache();
             break;
-        case main_send_data:
+        case main_wait_command:
+            break;
+        case main_parse_command_string:
+            break;
+        case main_run_command:
             break;
         default:
             break;
