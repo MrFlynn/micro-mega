@@ -7,6 +7,7 @@
 
 #include "ls.c"
 #include "wf.c"
+#include "rf.c"
 
 void run_command() {
     if (strcmp(command_name, "wf")) {
