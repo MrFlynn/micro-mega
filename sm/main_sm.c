@@ -41,7 +41,8 @@ enum MAIN_STATES main_tick(enum MAIN_STATES state) {
             break_command_string();
             break;
         case main_run_command:
-            break;
+            run_command();
+            command_flag = 0x00;
         default:
             break;
     }
