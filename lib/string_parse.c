@@ -1,3 +1,6 @@
+#ifndef STRING_PARSE_C
+#define STRING_PARSE_C
+
 #include "string_parse.h"
 
 // Clears the three chracter buffers used by the break_command_string.
@@ -18,7 +21,7 @@ void break_command_string() {
     for(uint8_t i = 0; i < strlen(disp_buffer); i++) {
         char * ci = (char *)disp_buffer[i];
 
-        if (*ci == ' ') {
+        if (strcmp(ci, " ")) {
             array_index++;
         } else {
             switch(array_index) {
@@ -37,3 +40,16 @@ void break_command_string() {
         }
     }
 }
+
+
+uint8_t search(char s[]) {
+    for (uint8_t i = 0; i < MAX_FILES; i++) {
+        if (strcmp(file_list[i], s)) {
+            return i;
+        }
+    }
+
+    return 255;
+}
+
+#endif
