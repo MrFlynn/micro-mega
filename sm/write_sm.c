@@ -22,6 +22,7 @@ enum WRITE_STATES write_tick(enum WRITE_STATES state) {
             } else {
                 state = write_run_ops;
             }
+            
             break;
         default:
             state = write_start;
