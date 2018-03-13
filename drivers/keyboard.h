@@ -10,6 +10,7 @@
 
 #define DATAPORT PIND & 0x02       // Data bus.
 #define VECTORPORT INT0_vect       // Interrupt vector port.
+volatile uint8_t count = 11;
 
 // Function definitions.
 void KB_init();
