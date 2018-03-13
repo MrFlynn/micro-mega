@@ -1,14 +1,12 @@
 #include "keyboard.h"
 
 void KB_init() {
-    EICRA |= 0x02; // Set external interrupt register to falling-edge trigger.
-    EIFR  |= 0x01; // Enable interrupt flag on INT0.
-    EIMSK |= 0x01; // Enable INT0 (PD2) to receive external interrupts.
+    sei();        // Enable global interrupt register.
+    EIMSK = 0x01; // Enable INT0 (PD2) to receive external interrupts.
 }
 
 void KB_destroy() {
-    EICRA &= 0xFD; // Turn off falling-edge triggering.
-    EIRF  &= 0xFE; // Disable interrupt flag.
+    cli();         // Clears global interrupt register.
     EIMSK &= 0xFE; // Disable interrupts on INT0.
 }
 
