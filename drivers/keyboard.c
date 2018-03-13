@@ -26,11 +26,26 @@ ISR(VECTORPORT) {
     count++;
 
     if (count >= 11) {
-        // Set curr_char_code to value of char_byte after 8 clock cycles.
-        curr_char_code = char_read_buffer;
+
 
         // Reset counter and char_read_buffer values.
         count = 0;
         char_read_buffer = 0x00;
+    }
+}
+
+void decode_and_push(uint8_t input) {
+    if (input == 0x5A) {
+        // Intercept 'enter' key and set command flag.
+        command_flag = 0x01;
+        return;
+    }
+
+    for (uint8_t i = 0; i < 38; i++) {
+        if (scancodes[i][0] == input) {
+            // If scancode matches, append character to display buffer.
+            strcat(disp_buffer, scancodes[i][1]);
+            return;
+        }
     }
 }
