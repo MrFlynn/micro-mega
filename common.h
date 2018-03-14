@@ -58,7 +58,7 @@ void update_metadata_cache(uint8_t len) {
 
 // Appends new character to display buffer.
 void write_disp_buffer(char * c) {
-    strcat(disp_buffer, c);
+    strncpy(&disp_buffer[strlen(disp_buffer)], c, 1);
 }
 
 #endif

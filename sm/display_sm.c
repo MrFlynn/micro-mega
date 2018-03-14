@@ -18,11 +18,8 @@ enum DISPLAY_STATES display_tick(enum DISPLAY_STATES state) {
             LCD_init();
             break;
         case display_refresh:
-            LCD_ClearScreen();
-            for (uint8_t i = 0; i < strlen(disp_buffer); i++) {
-                LCD_WriteData((unsigned char)disp_buffer[i]);
-            }
-
+            const char * disp_string = &disp_buffer;
+            LCD_DisplayString(1, disp_string);
             break;
         default:
             break;

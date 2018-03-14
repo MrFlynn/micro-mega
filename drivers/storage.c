@@ -139,7 +139,8 @@ void build_metadata_cache() {
                     num_files++;
                 } else {
                     // Copy title character to file list cache.
-                    strcat(file_list[num_files], (char *)curr_byte);
+                    strncpy(&file_list[num_files][strlen(file_list[num_files])],
+                        &(char)curr_byte, 1);
                 }
             }
         }

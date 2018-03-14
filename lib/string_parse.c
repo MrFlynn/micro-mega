@@ -26,13 +26,13 @@ void break_command_string() {
         } else {
             switch(array_index) {
                 case 0:
-                    strcat(command_name, ci);
+                    strncpy(&command_name[strlen(command_name)], ci, 1);
                     break;
                 case 1:
-                    strcat(write_fname, ci);
+                    strncpy(&write_fname[strlen(write_fname)], ci, 1);
                     break;
                 case 2:
-                    strcat(write_string, ci);
+                    strncpy(&write_string[strlen(write_string)], ci, 1);
                     break;
                 default:
                     break;

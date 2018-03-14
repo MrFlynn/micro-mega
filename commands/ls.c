@@ -4,9 +4,10 @@
 void ls_command() {
     for (uint8_t i = 0; i < num_files; i++) {
         for (uint8_t j = 0; i < sizeof(file_list[i]); i++) {
-            strcat(disp_buffer, (char *)file_list[i][j]);
+            strncpy(&disp_buffer[strlen(disp_buffer)], &file_list[i][j], 1);
         }
 
-        strcat(disp_buffer, " ");
+        char * space = ' ';
+        strncpy(&disp_buffer[strlen(disp_buffer)], space, 1);
     }
 }
