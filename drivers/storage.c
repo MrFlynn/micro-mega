@@ -108,7 +108,7 @@ void build_metadata_cache() {
     // Continue only if EEPROM is ready.
     if (eeprom_is_ready() == 1 && metadata_building == 0x00) {
         // Block size and temporary storage array.
-        uint8_t block_size = MAX_FILES * 10;
+        uint8_t block_size = 160;
         uint8_t file_metadata[block_size];
         metadata_building = 0x01;
 

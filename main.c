@@ -12,8 +12,6 @@ int main() {
     DDRA = 0xFF; PORTA = 0x00; // Display control lines.
     DDRC = 0xFF; PORTC = 0x00; // Display data lines.
     DDRD = 0x00; PORTD = 0xFF; // Keyboard and button overrides.
-    
-    DDRB = 0xFF; PORTB = 0x00;
 
     // Synchronous state machine setup:
     unsigned long main_tick_length = 100;
@@ -81,8 +79,6 @@ int main() {
             }
             tasks[i]->elapsedTime += 1;
         }
-        
-        PORTB = command_flag;
 
         while(!TimerFlag);
         TimerFlag = 0;

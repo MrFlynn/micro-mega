@@ -7,6 +7,7 @@
 
 #include "wf.c"
 #include "rf.c"
+#include "rm.c"
 #include "ls.c"
 
 char wf_command_str[3] = "wf";
@@ -20,7 +21,7 @@ void run_command() {
     } else if (strcmp(command_name, rf_command_str) == 0) {
         rf_command();
     } else if (strcmp(command_name, rm_command_str) == 0) {
-        return;
+        rm_command();
     } else if (strcmp(command_name, ls_command_str) == 0) {
         ls_command();
     }
