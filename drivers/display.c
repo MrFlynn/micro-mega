@@ -1,3 +1,6 @@
+#ifndef DISPLAY_C
+#define DISPLAY_C
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
@@ -11,8 +14,8 @@
 
 #define DATA_BUS PORTC		 // port connected to pins 7-14 of LCD display
 #define CONTROL_BUS PORTA	 // port connected to pins 4 and 6 of LCD disp.
-#define RS 6			     // pin number of uC connected to pin 4 of LCD disp.
-#define E 7			         // pin number of uC connected to pin 6 of LCD disp.
+#define RS 0			     // pin number of uC connected to pin 4 of LCD disp.
+#define E 1			         // pin number of uC connected to pin 6 of LCD disp.
 
 /*-------------------------------------------------------------------------*/
 
@@ -78,3 +81,5 @@ void delay_ms(int miliSec) //for 8 Mhz crystal
    asm("nop");
   }
 }
+
+#endif

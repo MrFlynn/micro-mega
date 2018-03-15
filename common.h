@@ -22,23 +22,26 @@ uint8_t write_flag = 0x00;
 uint8_t read_flag = 0x00;
 
 // File information section.
-char command_name[2];
-char write_fname[MAX_FILENAME_LENGTH];
-char write_string[MAX_FILE_SIZE];
+char command_name[3];
+char write_fname[MAX_FILENAME_LENGTH + 1];
+char write_string[MAX_FILE_SIZE + 1];
 
 // Reading data section.
 uint8_t read_start_addr = 0x00;
 uint8_t read_offset = 0x00;
 
 // Character display buffer.
-char disp_buffer[MAX_FILE_SIZE + 1];
+char disp_buffer[40];
 
 // Boot flags.
 uint8_t boot_complete = 0x00;
 uint8_t metadata_building = 0x00;
 
-// Command entered flag.
+// Command flags.
 uint8_t command_flag = 0x00;
+
+// Other.
+const char * space = " ";
 
 // Functions:
 
@@ -48,7 +51,7 @@ void update_metadata_cache(uint8_t len) {
     
     file_addr_indexes[num_files][0] = next_file_data_addr;
     next_file_data_addr += len; // Increment location for next string writes.
-    file_addr_indexes[num_files][1] = next_file_data_addr - 1;
+    file_addr_indexes[num_files][1] = next_file_data_addr;
 
     // Increment location for file info.
     next_file_info_addr += 8;

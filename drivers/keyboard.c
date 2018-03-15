@@ -38,19 +38,19 @@ ISR(VECTORPORT) {
 
 void decode_and_push(uint8_t input) {
     static uint8_t stop_repeat;
-
-    if (input == 0x5A) {
+    
+    if (input == 0x5A && strlen(disp_buffer) > 0) {
         // Intercept 'enter' key and set command flag.
         command_flag = 0x01;
         return;
-    } else if (input == 0x66) {
+    } else if (input == 0x66 && strlen(disp_buffer) > 0) {
         // Remove last character with backspace.
         disp_buffer[strlen(disp_buffer) - 1] = '\0';
     }
 
     for (uint8_t i = 0; i < 38; i++) {
         if (scancodes[i] == input) {
-            if (strcmp(&char_lookup[i], disp_buffer[strlen(disp_buffer)]) 
+            if (strcmp(&char_lookup[i], &disp_buffer[strlen(disp_buffer)]) 
                 && stop_repeat < 1) {
                 // Prevent keyboard from sending duplicate keys.
                 stop_repeat++;

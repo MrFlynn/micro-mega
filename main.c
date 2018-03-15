@@ -2,6 +2,8 @@
 #include "sm/write_sm.c"
 #include "sm/read_sm.c"
 #include "sm/display_sm.c"
+#include "drivers/keyboard.c"
+#include "drivers/display.c"
 
 #include "lib/scheduler.h"
 #include "lib/timer.h"
@@ -10,12 +12,14 @@ int main() {
     DDRA = 0xFF; PORTA = 0x00; // Display control lines.
     DDRC = 0xFF; PORTC = 0x00; // Display data lines.
     DDRD = 0x00; PORTD = 0xFF; // Keyboard and button overrides.
+    
+    DDRB = 0xFF; PORTB = 0x00;
 
     // Synchronous state machine setup:
     unsigned long main_tick_length = 100;
     unsigned long write_tick_length = 25;
     unsigned long read_tick_length = 25;
-    unsigned long display_tick_length = 100;
+    unsigned long display_tick_length = 200;
 
     // Get GCD:
     unsigned long tmp_GCD = 1;
@@ -60,6 +64,9 @@ int main() {
     d_task.elapsedTime = display_period;
     d_task.TickFct = &display_tick;
 
+    LCD_init();
+    KB_init();
+    
     TimerSet(GCD);
     TimerOn();
 
@@ -74,6 +81,8 @@ int main() {
             }
             tasks[i]->elapsedTime += 1;
         }
+        
+        PORTB = command_flag;
 
         while(!TimerFlag);
         TimerFlag = 0;

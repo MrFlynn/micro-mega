@@ -25,7 +25,6 @@ void read_val(op_t * operator) {
 // Operations will only be performed if the EEPROM is ready.
 void perform_storage_operation(op_t ** head, op_t ** tail) {
     if (eeprom_is_ready() == 1) {
-        // Only run if the EEPROM is ready for reading or writing.
         switch((*head)->op_num) {
             case 0:
                 // Operation 0 is a read.
@@ -35,8 +34,8 @@ void perform_storage_operation(op_t ** head, op_t ** tail) {
                 // Operation 1 is a write.
                 write_char(*head);
                 break;
-            default: break;
-        }        
+                default: break;
+        }
         
         // Pop the head from the queue.
         pop(head, tail);
@@ -109,7 +108,7 @@ void build_metadata_cache() {
     // Continue only if EEPROM is ready.
     if (eeprom_is_ready() == 1 && metadata_building == 0x00) {
         // Block size and temporary storage array.
-        uint8_t block_size = (MAX_FILES * 10) + 2;
+        uint8_t block_size = MAX_FILES * 10;
         uint8_t file_metadata[block_size];
         metadata_building = 0x01;
 
@@ -118,29 +117,22 @@ void build_metadata_cache() {
             (const void *)NEXT_FILE_INFO_ADDR,
             block_size);
 
-        // Wait until operation has completed.
-        eeprom_busy_wait();
-
         // Get next available byte addresses.
         next_file_info_addr = file_metadata[0] != 0xFF ? file_metadata[0] : FILE_INFO_START;
         next_file_data_addr = file_metadata[1] != 0xFF ? file_metadata[1] : FILE_REGION_START;
-
-        for (uint8_t i = 2; i < block_size; i++) {
-            uint8_t curr_byte = file_metadata[i];
-
+        
+        for (uint8_t i = 0; i < block_size; i++) {
+            uint8_t curr_byte = file_metadata[i + 2];
+            char curr_char = (char)curr_byte;
+            
             if (curr_byte != 0xFF) {
-                // Discard if cell has empty data.
-                if (i % 11 == 10) {
-                    // Starting address of file i.
-                    file_addr_indexes[num_files][0] = curr_byte;
-                } else if (i % 11 == 0) {
-                    // Ending address of file i.
+                if (i % 9 == 0 && i != 0) {
                     file_addr_indexes[num_files][1] = curr_byte;
                     num_files++;
+                } else if (i % 9 == 8 ) {
+                    file_addr_indexes[num_files][0] = curr_byte;
                 } else {
-                    // Copy title character to file list cache.
-                    strncpy(&file_list[num_files][strlen(file_list[num_files])],
-                        &(char)curr_byte, 1);
+                    strncpy(&file_list[num_files][strlen(file_list[num_files])], &curr_char, 1);
                 }
             }
         }

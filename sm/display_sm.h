@@ -5,8 +5,11 @@
 #include "../common.h"
 #include "../drivers/display.c"
 
-typedef enum DISPLAY_STATES {
+const char * boot_message = "booting...";
+
+enum DISPLAY_STATES {
     display_start,
+    display_boot_message,
     display_refresh
 } display_state;
 

@@ -3,6 +3,7 @@
 
 #include "../common.h"
 #include "../lib/string_parse.c"
+#include "../drivers/storage.c"
 #include "../commands/command.h"
 
 typedef enum MAIN_STATES {

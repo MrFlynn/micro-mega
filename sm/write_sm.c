@@ -42,12 +42,13 @@ enum WRITE_STATES write_tick(enum WRITE_STATES state) {
                 next_file_data_addr,
                 &write_head,
                 &write_tail);
-            
-            uint8_t string_length = strlen(write_string);
-            update_metadata_cache(string_length);
+
+            // Get string length
+            update_metadata_cache(strlen(write_string));
+            strcpy(file_list[num_files], write_fname);
 
             // Queue up writes to metadata block.
-            queue_metadata_writes(&write_head, &write_tail, string_length);
+            queue_metadata_writes(&write_head, &write_tail, strlen(write_string));
 
             break;
         case write_run_ops:
