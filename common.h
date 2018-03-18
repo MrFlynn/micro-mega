@@ -23,7 +23,7 @@ uint8_t read_flag = 0x00;
 uint8_t rm_flag = 0x00;
 
 // File information section.
-char command_name[3];
+char command_name[5];
 char write_fname[MAX_FILENAME_LENGTH + 1];
 char write_string[MAX_FILE_SIZE + 1];
 

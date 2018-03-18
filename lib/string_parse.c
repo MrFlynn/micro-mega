@@ -32,7 +32,7 @@ void break_command_string() {
     
     // For commands with no or one argument (ls, rm, rf).
     if (split1 == 0) {
-        strncpy(command_name, &disp_buffer[0], 2);
+        strncpy(command_name, &disp_buffer[0], 5);
     } else {
         strncpy(command_name, &disp_buffer[0], split1);
     }
