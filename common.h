@@ -20,6 +20,7 @@ uint8_t num_files = 0;
 // Locks for performing reading and writing.
 uint8_t write_flag = 0x00;
 uint8_t read_flag = 0x00;
+uint8_t rm_flag = 0x00;
 
 // File information section.
 char command_name[3];
@@ -29,6 +30,7 @@ char write_string[MAX_FILE_SIZE + 1];
 // Reading data section.
 uint8_t read_start_addr = 0x00;
 uint8_t read_offset = 0x00;
+uint8_t metadata_rm_address = 0x00;
 
 // Character display buffer.
 char disp_buffer[40];

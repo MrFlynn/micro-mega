@@ -33,22 +33,35 @@ enum WRITE_STATES write_tick(enum WRITE_STATES state) {
         case write_start: break;
         case write_wait: break;
         case write_queue_ops:
-            // Add filename and file contents strings into messaging queue.
-            queue_string_write(write_fname, 
-                next_file_info_addr, 
-                &write_head,
-                &write_tail);
-            queue_string_write(write_string,
-                next_file_data_addr,
-                &write_head,
-                &write_tail);
+            if (rm_flag == 0x01) {
+                remove_area(read_start_addr, 
+                    read_offset, 
+                    write_head, 
+                    write_tail);
+                remove_area(metadata_rm_address, 
+                    10,
+                    write_head,
+                    write_tail);
 
-            // Get string length
-            update_metadata_cache(strlen(write_string));
-            strcpy(file_list[num_files], write_fname);
+                rm_flag = 0x00;
+            } else {
+                // Add filename and file contents strings into messaging queue.
+                queue_string_write(write_fname, 
+                    next_file_info_addr, 
+                    &write_head,
+                    &write_tail);
+                queue_string_write(write_string,
+                    next_file_data_addr,
+                    &write_head,
+                    &write_tail);
 
-            // Queue up writes to metadata block.
-            queue_metadata_writes(&write_head, &write_tail, strlen(write_string));
+                // Get string length
+                update_metadata_cache(strlen(write_string));
+                strcpy(file_list[num_files], write_fname);
+
+                // Queue up writes to metadata block.
+                queue_metadata_writes(&write_head, &write_tail, strlen(write_string));
+            }
 
             break;
         case write_run_ops:

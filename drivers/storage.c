@@ -104,6 +104,12 @@ void queue_metadata_writes(op_t ** head, op_t ** tail, uint8_t string_len) {
 
 // Extracts file metadata from EEPROM and places it into RAM for faster access
 // of file metadata.
+//
+// The design goal of this system is to make reads as fast as possible. This
+// function is called during startup to pull file metadata into RAM. 
+// Additionally, this has the side effect of simplifying several commands
+// as complicated and time-intensive reads are forgone once this cache has 
+// been built.
 void build_metadata_cache() {
     // Continue only if EEPROM is ready.
     if (eeprom_is_ready() == 1 && metadata_building == 0x00) {
@@ -127,12 +133,16 @@ void build_metadata_cache() {
             
             if (curr_byte != 0xFF) {
                 if (i % 9 == 0 && i != 0) {
+                    // End address of file contents.
                     file_addr_indexes[num_files][1] = curr_byte;
                     num_files++;
                 } else if (i % 9 == 8 ) {
+                    // Start address of file contents.
                     file_addr_indexes[num_files][0] = curr_byte;
                 } else {
-                    strncpy(&file_list[num_files][strlen(file_list[num_files])], &curr_char, 1);
+                    // Copy single character of filename into file list.
+                    strncpy(&file_list[num_files][strlen(file_list[num_files])], 
+                        &curr_char, 1);
                 }
             }
         }
@@ -141,6 +151,23 @@ void build_metadata_cache() {
         boot_complete = 0x01;
         metadata_building = 0x00;
     }
+}
+
+// Removes data from a segment of memory from EEPROM. Using an address offset,
+// this function creates a string of (char)0xFF and hands it off to
+// queue_string_write.
+void remove_area(uint8_t addr_start, 
+    uint8_t addr_offset,
+    op_t ** head,
+    op_t ** tail) {
+
+    // Create a string containing all 0xFF (indicating empty region).
+    char * void_string = malloc(addr_offset + 1);
+    memset(void_string, 0xFF, addr_offset);
+    void_string[addr_offset + 1] = '\0';
+
+    // Using string queue function to overwrite region of memory.
+    queue_string_write(void_string, addr_start, head, tail);
 }
 
 #endif

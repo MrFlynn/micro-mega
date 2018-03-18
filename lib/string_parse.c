@@ -18,6 +18,7 @@ void break_command_string() {
 
     clear_buffers(); // Clear buffers used here.
     
+    // Attemp to locate the first two spaces in display buffer.
     for (uint8_t i = 0; i < strlen(disp_buffer); i++) {
         if (disp_buffer[i] == ' ') {
             if (split1 == 0) {
@@ -29,12 +30,14 @@ void break_command_string() {
         }
     }
     
+    // For commands with no or one argument (ls, rm, rf).
     if (split1 == 0) {
         strncpy(command_name, &disp_buffer[0], 2);
     } else {
         strncpy(command_name, &disp_buffer[0], split1);
     }
     
+    // For commands with two arguments (wf).
     if (split2 == 0) {
         strncpy(write_fname, &disp_buffer[split1 + 1], 
             strlen(disp_buffer) - split1 - 1);
@@ -45,9 +48,11 @@ void break_command_string() {
     }
 }
 
-
+// Searches through the file list array for a file with a matching name and 
+// returns it's index. Default return value is 255 (chosen because file list
+// array is much less than that).
 uint8_t search(char s[]) {
-    for (uint8_t i = 0; i < MAX_FILES; i++) {
+    for (uint8_t i = 0; i < num_files; i++) {
         if (strcmp(file_list[i], s) == 0) {
             return i;
         }
